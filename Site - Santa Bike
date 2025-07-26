@@ -7,23 +7,18 @@
     <title>Santa Bike – Venda de Bikes e Passeios em Lagoa Santa</title>
 
     <!--
-      ANALYSIS & CUSTOMIZATION (v11, Final Critique Implementation):
-      1.  Design & Aesthetics:
-          - Color Palette & Layout: Increased whitespace by making card backgrounds consistently white (`bg-white`) and enhancing shadows for a cleaner, more modern look. Increased vertical padding (`py-28 lg:py-36`) for more "breathing room".
-          - Fonts: Increased h2 font size and added subtle letter-spacing for better readability.
-          - Imagery: Replaced static "catalog" photos in `appData.bikes` with more dynamic, in-action images of people riding bikes to increase emotional connection.
-      2.  Usability & Navigation:
-          - Sticky Navigation: Added `sticky top-0` to the <nav> element for persistent navigation.
-          - CTAs: Renamed AI buttons to be more direct and benefit-oriented.
-      3.  Interactivity & Animations:
-          - Dark Mode: Implemented a fully functional dark mode toggle using Tailwind's `dark:` classes and localStorage for persistence.
-          - Hover Effects: Ensured all buttons and links have smooth `transition` properties.
-          - Scroll Animations: Diversified the scroll animation to include a slight scale and rotation for a more dynamic feel.
-      4.  Content & Marketing:
-          - Copywriting: Rewrote bike descriptions to focus on the emotional experience and benefits.
-          - Blog CTA: Restyled the "Ler mais" button to be more prominent.
-      5.  Accessibility:
-          - ARIA Labels: Added `aria-label` to all icon-only buttons for screen reader compatibility.
+      ANALYSIS & CUSTOMIZATION (v13, Section Removal):
+      1.  Blog Section Removal:
+          - Deleted the entire `<section id="blog">`.
+          - Removed "Blog" link from both desktop and mobile navigation.
+          - Deleted the `appData.blogPosts` array.
+          - Deleted the `renderBlog()` function and its associated modal logic (`openBlogModal`, `closeBlogModal`).
+      2.  Accessories Section Removal:
+          - Deleted the entire `<section id="accessories">`.
+          - Removed "Acessórios" link from both desktop and mobile navigation.
+          - Deleted the `appData.accessories` array.
+          - Deleted the `renderAccessories()` function.
+      3.  Result: The website is now more focused on the core services of selling bikes, providing routes, and the workshop, as requested.
     -->
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -57,7 +52,7 @@
         .font-heading { font-family: 'Poppins', sans-serif; letter-spacing: -0.01em; }
         .text-shadow { text-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         
-        .cta-button, .gemini-button { 
+        .cta-button { 
             display: inline-block; 
             font-family: 'Poppins', sans-serif; 
             font-weight: 700; 
@@ -71,20 +66,11 @@
             transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1); 
             box-shadow: 0 10px 15px -3px rgba(217, 119, 6, 0.3), 0 4px 6px -2px rgba(217, 119, 6, 0.2);
         }
-        .cta-button:hover, .gemini-button:hover { 
+        .cta-button:hover { 
             box-shadow: 0 20px 25px -5px rgba(217, 119, 6, 0.4), 0 10px 10px -5px rgba(217, 119, 6, 0.3); 
             background-color: #f59e0b; /* Original amber on hover */
             transform: translateY(-3px); 
         }
-        .gemini-button {
-            background: linear-gradient(to right, #4f46e5, #9333ea);
-            box-shadow: 0 10px 15px -3px rgba(147, 51, 234, 0.3), 0 4px 6px -2px rgba(147, 51, 234, 0.2);
-        }
-        .gemini-button:hover {
-            background: linear-gradient(to right, #6366f1, #a855f7);
-            box-shadow: 0 20px 25px -5px rgba(147, 51, 234, 0.4), 0 10px 10px -5px rgba(147, 51, 234, 0.3);
-        }
-
 
         .filter-button { 
             font-family: 'Poppins', sans-serif; 
@@ -198,91 +184,6 @@
         .mobile-menu { 
             transition: transform 0.3s ease-in-out; 
         }
-        
-        .modal-backdrop {
-            position: fixed;
-            inset: 0;
-            background-color: rgba(15, 23, 42, 0.8);
-            backdrop-filter: blur(4px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-            z-index: 100;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease-in-out;
-        }
-        .modal-backdrop.open {
-            opacity: 1;
-            pointer-events: auto;
-        }
-        .modal-content {
-            background-color: #ffffff;
-            border-radius: 0.75rem;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            max-width: 48rem;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            position: relative;
-            transform: scale(0.95) translateY(20px);
-            opacity: 0;
-            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
-        }
-        .dark .modal-content {
-            background-color: #1e293b;
-        }
-        .modal-backdrop.open .modal-content {
-            transform: scale(1) translateY(0);
-            opacity: 1;
-        }
-        .close-modal-btn {
-            position: absolute;
-            top: 0.75rem;
-            right: 0.75rem;
-            width: 2.5rem;
-            height: 2.5rem;
-            border-radius: 9999px;
-            background-color: #f1f5f9;
-            color: #64748b;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.25rem;
-            transition: all 0.2s ease-in-out;
-        }
-        .dark .close-modal-btn {
-            background-color: #334155;
-            color: #94a3b8;
-        }
-        .close-modal-btn:hover {
-            background-color: #e2e8f0;
-            color: #1e293b;
-            transform: rotate(90deg);
-        }
-        .dark .close-modal-btn:hover {
-            background-color: #475569;
-            color: #e2e8f0;
-        }
-        .loader {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #6366f1;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 2rem auto;
-        }
-        .dark .loader {
-            border: 4px solid #334155;
-            border-top: 4px solid #a855f7;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
     </style>
 </head>
 <body class="antialiased">
@@ -300,8 +201,6 @@
                 <a href="#services" class="hover:text-amber-500 transition-colors">Serviços</a>
                 <a href="#bike-explorer" class="hover:text-amber-500 transition-colors">Bikes</a>
                 <a href="#route-planner" class="hover:text-amber-500 transition-colors">Rotas</a>
-                <a href="#blog" class="hover:text-amber-500 transition-colors">Blog</a>
-                <a href="#accessories" class="hover:text-amber-500 transition-colors">Acessórios</a>
                 <a href="#support" class="hover:text-amber-500 transition-colors">FAQ</a>
                 <button id="theme-toggle" class="text-2xl" aria-label="Alternar modo de cor">
                     <i class="fas fa-sun"></i>
@@ -315,8 +214,6 @@
             <a href="#services" class="block hover:text-amber-500 transition-colors mobile-menu-link">Serviços</a>
             <a href="#bike-explorer" class="block hover:text-amber-500 transition-colors mobile-menu-link">Bikes</a>
             <a href="#route-planner" class="block hover:text-amber-500 transition-colors mobile-menu-link">Rotas</a>
-            <a href="#blog" class="block hover:text-amber-500 transition-colors mobile-menu-link">Blog</a>
-            <a href="#accessories" class="block hover:text-amber-500 transition-colors mobile-menu-link">Acessórios</a>
             <a href="#support" class="block hover:text-amber-500 transition-colors mobile-menu-link">FAQ</a>
         </div>
         <div class="container mx-auto px-6 flex-grow flex items-center justify-center text-center relative z-10">
@@ -347,14 +244,11 @@
             <div class="container mx-auto px-6 text-center">
                 <h2 class="font-heading text-4xl md:text-5xl font-bold text-slate-800 dark:text-white mb-4 scroll-reveal">Explore Nossas Bikes</h2>
                 <p class="text-xl max-w-3xl mx-auto mb-12 text-slate-600 dark:text-slate-400 leading-relaxed scroll-reveal">Temos a bike certa para cada tipo de aventura. Filtre por categoria e encontre sua companheira de pedal.</p>
-                <div class="flex flex-wrap justify-center items-center gap-4 mb-12 scroll-reveal">
-                    <div id="bike-filters" class="flex flex-wrap justify-center gap-2 sm:gap-4">
-                        <button class="filter-button active" data-filter="all">Todas</button>
-                        <button class="filter-button" data-filter="passeio">Passeio</button>
-                        <button class="filter-button" data-filter="trilha">Trilha</button>
-                        <button class="filter-button" data-filter="infantil">Infantil</button>
-                    </div>
-                    <button id="open-bike-recommender" class="gemini-button text-sm sm:text-base py-2 px-4">✨ Encontre sua Bike Ideal</button>
+                <div id="bike-filters" class="flex flex-wrap justify-center gap-2 sm:gap-4 mb-12 scroll-reveal">
+                    <button class="filter-button active" data-filter="all">Todas</button>
+                    <button class="filter-button" data-filter="passeio">Passeio</button>
+                    <button class="filter-button" data-filter="trilha">Trilha</button>
+                    <button class="filter-button" data-filter="infantil">Infantil</button>
                 </div>
                 <div id="bike-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
                     <!-- Bike cards will be rendered here by JS -->
@@ -366,10 +260,9 @@
             <div class="container mx-auto px-6">
                 <div class="text-center">
                     <h2 class="font-heading text-4xl md:text-5xl font-bold text-slate-800 dark:text-white mb-4 scroll-reveal">Encontre Sua Trilha</h2>
-                    <p class="text-xl max-w-3xl mx-auto mb-8 text-slate-600 dark:text-slate-400 leading-relaxed scroll-reveal">
+                    <p class="text-xl max-w-3xl mx-auto mb-12 text-slate-600 dark:text-slate-400 leading-relaxed scroll-reveal">
                         Pedalar é mais do que um exercício: é sentir o vento no rosto, conectar-se com a natureza e desafiar seus limites. É a terapia que limpa a mente e fortalece o corpo. Aqui em Lagoa Santa, cada trilha é um convite para uma nova história. Escolha a sua e sinta a liberdade.
                     </p>
-                    <button id="open-custom-route" class="gemini-button mb-12 scroll-reveal">✨ Criar Rota Personalizada</button>
                 </div>
                 <div class="lg:grid lg:grid-cols-5 lg:gap-8 items-start">
                     <div class="lg:col-span-3 mb-8 lg:mb-0 scroll-reveal">
@@ -400,28 +293,6 @@
             </div>
         </section>
 
-        <section id="blog" class="py-28 lg:py-36">
-            <div class="container mx-auto px-6">
-                <div class="text-center">
-                    <h2 class="font-heading text-4xl md:text-5xl font-bold text-slate-800 dark:text-white mb-4 scroll-reveal">Blog Santa Bike</h2>
-                    <p class="text-xl max-w-3xl mx-auto mb-16 text-slate-600 dark:text-slate-400 leading-relaxed scroll-reveal">Histórias, dicas e muita adrenalina. Nosso espaço para compartilhar a paixão pelo pedal radical e as aventuras que vivemos sobre duas rodas.</p>
-                </div>
-                <div id="blog-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <!-- Blog posts will be rendered here by JS -->
-                </div>
-            </div>
-        </section>
-
-        <section id="accessories" class="bg-white dark:bg-slate-900 py-28 lg:py-36">
-            <div class="container mx-auto px-6 text-center">
-                <h2 class="font-heading text-4xl md:text-5xl font-bold text-slate-800 dark:text-white mb-4 scroll-reveal">Equipe-se Para a Aventura</h2>
-                <p class="text-xl max-w-3xl mx-auto mb-16 text-slate-600 dark:text-slate-400 leading-relaxed scroll-reveal">Segurança e conforto são essenciais em qualquer pedal. Confira nossa seleção de acessórios indispensáveis para ciclistas.</p>
-                <div id="accessories-grid" class="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-5xl mx-auto">
-                    <!-- Accessories will be rendered here by JS -->
-                </div>
-            </div>
-        </section>
-        
         <section id="support" class="bg-white dark:bg-slate-900 pt-12 pb-24 lg:pt-16 lg:pb-32">
             <div class="container mx-auto px-6">
                 <div class="max-w-3xl mx-auto">
@@ -465,38 +336,6 @@
         </div>
     </footer>
 
-    <!-- Blog Post Modal -->
-    <div id="blog-modal" class="modal-backdrop">
-        <div id="modal-content-container" class="modal-content">
-            <!-- Content will be injected here by JS -->
-        </div>
-    </div>
-
-    <!-- Gemini Bike Recommender Modal -->
-    <div id="bike-recommender-modal" class="modal-backdrop">
-        <div class="modal-content">
-            <button class="close-modal-btn" aria-label="Fechar modal">×</button>
-            <h3 class="font-heading text-2xl font-bold text-cyan-800 dark:text-cyan-400 mb-4">✨ Assistente de Bikes</h3>
-            <p class="text-slate-600 dark:text-slate-400 mb-6">Não sabe qual bike escolher? Descreva o que você precisa e nossa IA vai te ajudar! Ex: "Quero uma bike para passeios leves na orla com minha filha de 8 anos".</p>
-            <textarea id="bike-recommender-input" class="w-full p-3 border border-slate-300 dark:border-slate-600 rounded-lg mb-4 bg-white dark:bg-slate-800" rows="3" placeholder="Descreva aqui o que você procura..."></textarea>
-            <button id="bike-recommender-submit" class="gemini-button w-full">Encontrar minha bike</button>
-            <div id="bike-recommender-result" class="mt-6"></div>
-        </div>
-    </div>
-
-    <!-- Gemini Custom Route Modal -->
-    <div id="custom-route-modal" class="modal-backdrop">
-        <div class="modal-content">
-            <button class="close-modal-btn" aria-label="Fechar modal">×</button>
-            <h3 class="font-heading text-2xl font-bold text-cyan-800 dark:text-cyan-400 mb-4">✨ Criador de Rotas Personalizadas</h3>
-            <p class="text-slate-600 dark:text-slate-400 mb-6">Descreva o pedal dos seus sonhos e nossa IA criará uma sugestão de rota para você. Ex: "Uma trilha curta com belas vistas para fotos e um bom lugar para tomar um açaí no final".</p>
-            <textarea id="custom-route-input" class="w-full p-3 border border-slate-300 dark:border-slate-600 rounded-lg mb-4 bg-white dark:bg-slate-800" rows="3" placeholder="Descreva a rota que você imagina..."></textarea>
-            <button id="custom-route-submit" class="gemini-button w-full">Gerar Rota</button>
-            <div id="custom-route-result" class="mt-6"></div>
-        </div>
-    </div>
-
-
     <script>
     document.addEventListener('DOMContentLoaded', () => {
 
@@ -524,17 +363,6 @@
                 { id: 'orla', name: 'Volta da Lagoa', difficulty: 2, distance: '18km', duration: '1h', elevation: 'Plano', description: 'Um passeio clássico e relaxante, perfeito para curtir a brisa da lagoa e observar o movimento. Ideal para toda a família.', bike: 'Bike ideal: Urbana Classic', embedUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d59987.52579178453!2d-43.93144383124999!3d-19.627705400000004!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xa67d1dfe2f2673%3A0xdf9b45fe423db34e!2sLagoa%20Santa%2C%20MG!5e0!3m2!1spt-BR!2sbr!4v1721858197304!5m2!1spt-BR!2sbr' },
                 { id: 'trilha', name: 'Trilha do Morro do Cruzeiro', difficulty: 5, distance: '12km', duration: '1.5h', elevation: '250m', description: 'Nosso passeio guiado mais popular! Uma trilha com subidas suaves por estradões de terra, passando por matas ciliares até um mirante com vista panorâmica da lagoa e da cidade.', bike: 'Bike ideal: Exploradora X', embedUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3749.701188019943!2d-43.8997226237937!3d-19.96916513915206!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xa613615178587d%3A0x1b140f6a34998813!2sMorro%20do%20Cruzeiro!5e0!3m2!1spt-BR!2sbr!4v1721858343419!5m2!1spt-BR!2sbr' },
                 { id: 'mirante', name: 'Travessia para Serra do Cipó', difficulty: 8, distance: '35km', duration: '3h', elevation: '600m', description: 'Para os mais experientes. Uma rota desafiadora que conecta Lagoa Santa ao início da Serra do Cipó. Inclui single tracks técnicos e subidas íngremes, com paisagens de tirar o fôlego.', bike: 'Bike ideal: Trilheira Pro', embedUrl: 'https://www.google.com/maps/embed?pb=!1m28!1m12!1m3!1d96031.9198906214!2d-43.8828347101235!3d-19.55393992388385!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m13!3e1!4m5!1s0xa67d1dfe2f2673%3A0xdf9b45fe423db34e!2sLagoa%20Santa%2C%20MG!3m2!1d-19.6277054!2d-43.8934482!4m5!1s0xa601a345532c69%3A0x6361b2410e349883!2sSerra%20do%20Cip%C3%B3%2C%20Santana%20do%20Riacho%20-%20MG!3m2!1d-19.301389!2d-43.593889!5e0!3m2!1spt-BR!2sbr!4v1721858434639!5m2!1spt-BR!2sbr' }
-            ],
-            blogPosts: [
-                { type: 'blog', category: 'Aventura', title: 'Conquistando a Serra do Cipó', text: 'Relato completo da nossa travessia de MTB, com dicas de navegação, pontos de apoio e as paisagens mais incríveis do percurso.', fullContent: '<h2>Conquistando a Serra do Cipó de Bike</h2><p>A Serra do Cipó é um paraíso para qualquer ciclista. Neste post, compartilhamos nossa experiência na travessia, um pedal desafiador e recompensador. Falamos sobre a preparação física, os equipamentos que usamos e os trechos mais técnicos. Se você busca uma aventura de verdade, essa é a trilha!</p>', image: 'https://images.pexels.com/photos/163452/biker-mountain-biking-sunset-163452.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&dpr=2', alt: 'Ciclista no topo de uma montanha ao pôr do sol.' },
-                { type: 'blog', category: 'Manutenção', title: 'Guia Pós-Trilha: Cuidados Essenciais', text: 'Chegou em casa coberto de lama e feliz? Perfeito! Agora é hora de cuidar da sua bike. Aprenda os 5 passos essenciais para a limpeza e manutenção.', fullContent: '<h2>Guia Pós-Trilha: Cuidados Essenciais com sua Bike</h2><p>Depois de uma trilha incrível, sua bike merece um cuidado especial. Ignorar a manutenção pode diminuir a vida útil dos componentes. Siga estes passos:</p><ol><li><strong>Lavagem:</strong> Remova toda a lama e poeira. Use produtos específicos para não danificar a pintura e os componentes.</li><li><strong>Secagem:</strong> Seque bem a bike, especialmente a relação (corrente, cassete, coroas).</li><li><strong>Lubrificação:</strong> Lubrifique a corrente com um produto adequado para as condições do terreno (seco ou úmido).</li><li><strong>Inspeção:</strong> Verifique o estado dos pneus, freios e marchas.</li><li><strong>Apertos:</strong> Cheque se todos os parafusos estão bem apertados.</li></ol>', image: 'https://images.pexels.com/photos/5994533/pexels-photo-5994533.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&dpr=2', alt: 'Pessoa limpando uma bicicleta.' },
-                { type: 'blog', category: 'Equipamentos', title: 'MTB Raiz: O Kit Indispensável', text: 'Para encarar as trilhas mais pesadas, não basta ter uma boa bike. Veja a lista de equipamentos que separamos para garantir sua segurança e performance.', fullContent: '<h2>MTB Raiz: O Kit Indispensável para Trilhas Pesadas</h2><p>Quando a trilha fica séria, seus equipamentos precisam acompanhar. Além do básico, considere estes itens:</p><ul><li><strong>Mochila de Hidratação:</strong> Essencial para se manter hidratado sem precisar parar.</li><li><strong>Canivete de Ferramentas:</strong> Um bom canivete multiferramentas pode te salvar de muitas enrascadas.</li><li><strong>GPS/Ciclocomputador:</strong> Para não se perder e monitorar seu desempenho.</li><li><strong>Luzes de Sinalização:</strong> Mesmo de dia, ajudam na visibilidade em trechos de mata fechada ou estradas.</li></ul>', image: 'https://images.pexels.com/photos/1439227/pexels-photo-1439227.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&dpr=2', alt: 'Acessórios de ciclismo, como capacete e luvas.' }
-            ],
-            accessories: [
-                { name: 'Capacetes', image: 'https://images.pexels.com/photos/1439227/pexels-photo-1439227.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&dpr=2', alt: 'Capacete de ciclismo moderno' },
-                { name: 'Luvas', image: 'https://images.pexels.com/photos/262389/pexels-photo-262389.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&dpr=2', alt: 'Luvas de ciclismo' },
-                { name: 'Sinalizadores', image: 'https://images.pexels.com/photos/4090632/pexels-photo-4090632.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&dpr=2', alt: 'Luz de sinalização traseira para bicicleta' },
-                { name: 'Hidratação', image: 'https://images.pexels.com/photos/3829201/pexels-photo-3829201.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&dpr=2', alt: 'Garrafa de água para ciclismo' }
             ],
             faqs: [
                 { q: 'Como funciona para comprar uma bike?', a: 'É simples e personalizado! Nossa equipe de especialistas conversa com você para entender suas necessidades e seu estilo de pedal. A partir daí, recomendamos os melhores modelos. Você pode fazer um test-ride para sentir a bike e ter certeza da sua escolha. Oferecemos as melhores condições de pagamento para você sair pedalando!' },
@@ -629,87 +457,6 @@
                 renderBikes(e.target.dataset.filter);
             }
         });
-
-        // --- Blog Section & Modal ---
-        const blogGrid = document.getElementById('blog-grid');
-        const blogModal = document.getElementById('blog-modal');
-        const modalContentContainer = document.getElementById('modal-content-container');
-
-        function openBlogModal(post) {
-            modalContentContainer.innerHTML = `
-                <button class="close-modal-btn" aria-label="Fechar modal">×</button>
-                <img src="${post.image}" alt="${post.alt}" class="w-full h-64 object-cover rounded-t-lg" onerror="this.onerror=null;this.src='https://placehold.co/800x400/e2e8f0/475569?text=Imagem+do+Blog';">
-                <div class="p-8">
-                    <p class="text-cyan-700 dark:text-cyan-400 font-bold text-sm uppercase mb-2">${post.category}</p>
-                    <div class="prose dark:prose-invert max-w-none">
-                        ${post.fullContent}
-                    </div>
-                </div>
-            `;
-            blogModal.classList.add('open');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeBlogModal() {
-            blogModal.classList.remove('open');
-            document.body.style.overflow = '';
-        }
-        
-        blogModal.addEventListener('click', (e) => {
-            if (e.target === blogModal || e.target.closest('.close-modal-btn')) {
-                closeBlogModal();
-            }
-        });
-
-        function renderBlog() {
-            blogGrid.innerHTML = '';
-            appData.blogPosts.forEach((item, index) => {
-                const card = document.createElement('div');
-                card.className = 'bg-white dark:bg-slate-800 rounded-2xl shadow-lg overflow-hidden flex flex-col transform transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 scroll-reveal';
-                card.style.transitionDelay = `${index * 100}ms`;
-
-                card.innerHTML = `
-                    <img src="${item.image}" alt="${item.alt}" loading="lazy" onerror="this.onerror=null;this.src='https://placehold.co/800x600/e2e8f0/475569?text=Blog';" class="w-full h-56 object-cover">
-                    <div class="p-8 flex flex-col flex-grow">
-                        <p class="text-cyan-700 dark:text-cyan-400 font-bold text-sm uppercase mb-2">${item.category}</p>
-                        <h3 class="font-heading text-2xl font-bold text-slate-800 dark:text-white mb-3">${item.title}</h3>
-                        <p class="text-slate-600 dark:text-slate-400 mb-6 flex-grow">${item.text}</p>
-                        <button data-post-index="${index}" class="blog-read-more-btn font-bold text-sm text-white bg-cyan-700 hover:bg-cyan-800 dark:bg-cyan-600 dark:hover:bg-cyan-700 rounded-full px-4 py-2 transition-colors mt-auto self-start">Ler mais <i class="fas fa-arrow-right ml-1"></i></button>
-                    </div>
-                `;
-                blogGrid.appendChild(card);
-                observer.observe(card);
-            });
-
-            blogGrid.addEventListener('click', (e) => {
-                const button = e.target.closest('.blog-read-more-btn');
-                if (button) {
-                    const postIndex = button.dataset.postIndex;
-                    const post = appData.blogPosts[postIndex];
-                    if (post && post.fullContent) {
-                        openBlogModal(post);
-                    }
-                }
-            });
-        }
-        
-        // --- Accessories Section ---
-        const accessoriesGrid = document.getElementById('accessories-grid');
-        function renderAccessories() {
-            appData.accessories.forEach((item, index) => {
-                const card = document.createElement('div');
-                card.className = 'text-center scroll-reveal';
-                card.style.transitionDelay = `${index * 100}ms`;
-                card.innerHTML = `
-                    <div class="bg-white dark:bg-slate-800 rounded-lg overflow-hidden mb-4 shadow-lg hover:shadow-2xl transition-shadow duration-300">
-                        <img src="${item.image}" alt="${item.alt}" loading="lazy" class="w-full h-40 object-cover">
-                    </div>
-                    <h4 class="font-heading font-semibold text-slate-700 dark:text-slate-300">${item.name}</h4>
-                `;
-                accessoriesGrid.appendChild(card);
-                observer.observe(card);
-            });
-        }
 
         // --- FAQ Section ---
         const faqContainer = document.getElementById('faq-container');
@@ -850,145 +597,6 @@
             });
         }
         
-        // --- Gemini API Integration ---
-        const bikeRecommenderModal = document.getElementById('bike-recommender-modal');
-        const customRouteModal = document.getElementById('custom-route-modal');
-
-        // Function to open a modal
-        function openModal(modal) {
-            modal.classList.add('open');
-            document.body.style.overflow = 'hidden';
-        }
-
-        // Function to close a modal
-        function closeModal(modal) {
-            modal.classList.remove('open');
-            document.body.style.overflow = '';
-        }
-        
-        // Generic Gemini API call function
-        async function callGemini(prompt) {
-            let chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
-            const payload = { contents: chatHistory };
-            const apiKey = ""; 
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-
-            try {
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                if (!response.ok) {
-                    throw new Error(`API request failed with status ${response.status}`);
-                }
-                const result = await response.json();
-                if (result.candidates && result.candidates.length > 0 &&
-                    result.candidates[0].content && result.candidates[0].content.parts &&
-                    result.candidates[0].content.parts.length > 0) {
-                    return result.candidates[0].content.parts[0].text;
-                } else {
-                    console.error("Unexpected API response structure:", result);
-                    return null;
-                }
-            } catch (error) {
-                console.error("Error calling Gemini API:", error);
-                return null;
-            }
-        }
-
-        // Bike Recommender Logic
-        document.getElementById('open-bike-recommender').addEventListener('click', () => openModal(bikeRecommenderModal));
-        bikeRecommenderModal.querySelector('.close-modal-btn').addEventListener('click', () => closeModal(bikeRecommenderModal));
-        
-        document.getElementById('bike-recommender-submit').addEventListener('click', async () => {
-            const input = document.getElementById('bike-recommender-input').value;
-            const resultDiv = document.getElementById('bike-recommender-result');
-            if (!input) return;
-
-            resultDiv.innerHTML = '<div class="loader"></div>';
-            
-            const bikesForPrompt = JSON.stringify(appData.bikes.map(b => ({id: b.id, name: b.name, category: b.category, description: b.description})));
-            const prompt = `Você é um especialista em vendas da Santa Bike. Um cliente descreveu o que precisa: "${input}". Com base na lista de bicicletas disponíveis ${bikesForPrompt}, recomende a(s) melhor(es) bike(s). Retorne APENAS um JSON no formato {"recommendations": ["id_da_bike_1", "id_da_bike_2"]}.`;
-
-            const responseText = await callGemini(prompt);
-            if (responseText) {
-                try {
-                    // Clean the response to ensure it's valid JSON
-                    const cleanedResponse = responseText.replace(/```json/g, '').replace(/```/g, '').trim();
-                    const responseJson = JSON.parse(cleanedResponse);
-                    
-                    resultDiv.innerHTML = '<h4 class="font-heading font-bold text-lg mb-4 dark:text-white">Encontramos as bikes perfeitas para você!</h4>';
-                    if (responseJson.recommendations && responseJson.recommendations.length > 0) {
-                        responseJson.recommendations.forEach(bikeId => {
-                            const bike = appData.bikes.find(b => b.id === bikeId);
-                            if (bike) {
-                                const bikeCard = document.createElement('div');
-                                bikeCard.className = 'bg-slate-50 dark:bg-slate-700 rounded-lg p-4 mb-4 flex items-center gap-4';
-                                bikeCard.innerHTML = `
-                                    <img src="${bike.image}" alt="${bike.alt}" class="w-24 h-24 object-cover rounded-md">
-                                    <div>
-                                        <h5 class="font-bold font-heading dark:text-white">${bike.name}</h5>
-                                        <p class="text-sm text-slate-600 dark:text-slate-400">${bike.description}</p>
-                                        <a href="${bike.whatsapp}" target="_blank" class="text-sm font-bold text-cyan-700 dark:text-cyan-400 hover:text-amber-600">Ver detalhes <i class="fab fa-whatsapp ml-1"></i></a>
-                                    </div>
-                                `;
-                                resultDiv.appendChild(bikeCard);
-                            }
-                        });
-                    } else {
-                        resultDiv.innerHTML += '<p class="dark:text-slate-400">Não encontramos uma recomendação exata. Que tal explorar nosso catálogo completo?</p>';
-                    }
-                } catch (e) {
-                    console.error("Failed to parse Gemini response:", e);
-                    resultDiv.innerHTML = '<p class="text-red-500">Ocorreu um erro ao processar a recomendação. Por favor, tente novamente.</p>';
-                }
-            } else {
-                resultDiv.innerHTML = '<p class="text-red-500">Não foi possível obter uma recomendação. Por favor, tente novamente mais tarde.</p>';
-            }
-        });
-
-        // Custom Route Logic
-        document.getElementById('open-custom-route').addEventListener('click', () => openModal(customRouteModal));
-        customRouteModal.querySelector('.close-modal-btn').addEventListener('click', () => closeModal(customRouteModal));
-
-        document.getElementById('custom-route-submit').addEventListener('click', async () => {
-            const input = document.getElementById('custom-route-input').value;
-            const resultDiv = document.getElementById('custom-route-result');
-            if (!input) return;
-
-            resultDiv.innerHTML = '<div class="loader"></div>';
-
-            const prompt = `Você é um guia de ciclismo especialista em Lagoa Santa, MG. Um ciclista pediu uma sugestão de rota com a seguinte descrição: "${input}". Crie uma rota fictícia, mas plausível para a região. A rota deve ter um nome criativo, uma descrição, uma distância aproximada em km, duração estimada, nível de dificuldade (1-10) e uma sugestão de bike ideal. Retorne APENAS um JSON no formato {"route": {"name": "...", "description": "...", "distance": "...", "duration": "...", "difficulty": ..., "bike": "..."}}.`;
-
-            const responseText = await callGemini(prompt);
-            if (responseText) {
-                try {
-                    const cleanedResponse = responseText.replace(/```json/g, '').replace(/```/g, '').trim();
-                    const responseJson = JSON.parse(cleanedResponse);
-                    const route = responseJson.route;
-                    resultDiv.innerHTML = `
-                        <h4 class="font-heading font-bold text-lg mb-4 dark:text-white">Sua aventura personalizada te espera!</h4>
-                        <div class="bg-slate-50 dark:bg-slate-700 rounded-lg p-4">
-                            <h5 class="font-bold font-heading text-cyan-800 dark:text-cyan-400">${route.name}</h5>
-                            <div class="flex flex-wrap gap-x-4 gap-y-2 text-sm text-slate-600 dark:text-slate-400 my-2">
-                                <span><i class="fas fa-route mr-1"></i> ${route.distance}</span>
-                                <span><i class="fas fa-clock mr-1"></i> ${route.duration}</span>
-                                <span><i class="fas fa-tachometer-alt mr-1"></i> Dificuldade: ${route.difficulty}/10</span>
-                            </div>
-                            <p class="text-sm text-slate-600 dark:text-slate-400 mb-3">${route.description}</p>
-                            <p class="font-bold text-xs text-slate-500 dark:text-slate-300 bg-slate-200 dark:bg-slate-600 inline-block px-2 py-1 rounded-full">Bike ideal: ${route.bike}</p>
-                        </div>
-                    `;
-                } catch (e) {
-                    console.error("Failed to parse Gemini response:", e);
-                    resultDiv.innerHTML = '<p class="text-red-500">Ocorreu um erro ao gerar a rota. Por favor, tente novamente.</p>';
-                }
-            } else {
-                 resultDiv.innerHTML = '<p class="text-red-500">Não foi possível gerar a rota. Por favor, tente novamente mais tarde.</p>';
-            }
-        });
-        
         // --- Dark Mode Toggle ---
         const themeToggle = document.getElementById('theme-toggle');
         const htmlEl = document.documentElement;
@@ -1020,8 +628,6 @@
         // --- Initial Function Calls ---
         renderServices();
         renderBikes();
-        renderBlog();
-        renderAccessories();
         renderFaqs();
         renderRouteList();
         initializeChart();
